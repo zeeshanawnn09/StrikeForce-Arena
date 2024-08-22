@@ -13,9 +13,17 @@ public class PlayerMovement : MonoBehaviour
     InputManager _inputManager;
 
     Rigidbody _rb;
+    
+    [Header("Player Movement Flags")]
+
+    public bool isSprinting;
+    public bool isWalking;
+
+    [Header("Player Movement Settings")]
 
     public float speed = 2.0f;
     public float RotateSpeed = 13.0f;
+    public float SprintSpeed = 6.8f;
 
     private void Awake()
     {
@@ -26,14 +34,30 @@ public class PlayerMovement : MonoBehaviour
 
     public void Movement()
     {
-        //get the camera transform, so we can move the player in the direction of the camera but in the x and z axis only
-        _Move_dir = _Camera.forward * _inputManager.Input_Vertical;
+        //Move the player in the direction of the camera
+        _Move_dir = new Vector3(_Camera.forward.x, 0f, _Camera.forward.z) * _inputManager.Input_Vertical;
         _Move_dir = _Move_dir + _Camera.right * _inputManager.Input_Horizontal;
         _Move_dir.Normalize();
 
         _Move_dir.y = 0;
 
-        _Move_dir = _Move_dir * speed;
+        if (isSprinting)
+        {
+            _Move_dir = _Move_dir * SprintSpeed;
+        }
+        else
+        {
+            if (_inputManager.movementValue >= 0.5f)
+            {
+                _Move_dir = _Move_dir * speed;
+                isWalking = true;
+            }
+
+            if (_inputManager.movementValue >= 0f)
+            {
+                isWalking = false;
+            }
+        }
         _velocity = _Move_dir;
         _rb.velocity = _velocity;
     }

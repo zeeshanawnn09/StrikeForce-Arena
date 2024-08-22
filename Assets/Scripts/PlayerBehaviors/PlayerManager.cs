@@ -6,11 +6,13 @@ public class PlayerManager : MonoBehaviour
 {
     InputManager _inputManager;
     PlayerMovement _playerMovement;
+    CameraController _cameraController;
 
     private void Awake()
     {
         _inputManager = GetComponent<InputManager>();
         _playerMovement = GetComponent<PlayerMovement>();
+        _cameraController = FindAnyObjectByType<CameraController>();
     }
 
     // Update is called once per frame
@@ -23,5 +25,10 @@ public class PlayerManager : MonoBehaviour
     void FixedUpdate()
     {
         _playerMovement.Handler();
+    }
+
+    private void LateUpdate()
+    {
+        _cameraController.CameraHandler();
     }
 }
