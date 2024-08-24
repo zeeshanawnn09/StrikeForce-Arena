@@ -19,7 +19,11 @@ public class InputManager : MonoBehaviour
     public float cameraInput_X;
     public float cameraInput_Y;
 
-    public bool isSprinting;
+
+    [Header("Input Buttons Flags")]
+
+    public bool Sprinting;
+    public bool Jumping;
 
     private void Awake()
     {
@@ -39,8 +43,9 @@ public class InputManager : MonoBehaviour
             _controls.PlayerMovements.CameraMovement.performed += i => look = i.ReadValue<Vector2>();
 
             //When the player press the sprint button, the isSprinting bool will be updated
-            _controls.PlayerActions.Sprint.performed += i => isSprinting = true;
-            _controls.PlayerActions.Sprint.canceled += i => isSprinting = false;
+            _controls.PlayerActions.Sprint.performed += i => Sprinting = true;
+            _controls.PlayerActions.Sprint.canceled += i => Sprinting = false;
+            _controls.PlayerActions.Jump.performed += i => Jumping = true;
         }
 
         _controls.Enable();
@@ -70,7 +75,7 @@ public class InputManager : MonoBehaviour
     private void SprintHandler()
     {
         //if the player is walking and when the SHIFT button is pressed, the player will sprint
-        if (isSprinting && movementValue > 0.5f)
+        if (Sprinting && movementValue > 0.5f)
         {
             _playerMovement.isSprinting = true;
         }
@@ -79,10 +84,22 @@ public class InputManager : MonoBehaviour
             _playerMovement.isSprinting = false;
         }
     }
+
+    private void JumpHandler()
+    {
+        //if the player is jumping, the player will jump and the isJumping bool will be set to false
+        if (Jumping)
+        {
+            Jumping = false;
+            _playerMovement.JumpBehavior();
+        }
+    }
+
     public void Handler()
     {
         MovementHandler();
         SprintHandler();
+        JumpHandler();
     }
 }
 

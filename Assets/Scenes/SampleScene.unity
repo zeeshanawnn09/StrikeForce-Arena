@@ -442,7 +442,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 0}
   cameraTransform: {fileID: 0}
-  camera: {fileID: 627440428}
+  camera_transform: {fileID: 627440428}
   CameraSmoothTime: 0.3
   HorizontalLook: 0
   H_LookSpeed: 0.3
@@ -2517,7 +2517,7 @@ Transform:
   m_GameObject: {fileID: 1219922792981141903}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: -77.84742, y: 0.09, z: -14.7328005}
+  m_LocalPosition: {x: -77.84742, y: 0.057, z: -14.7328005}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -3538,7 +3538,8 @@ MonoBehaviour:
   movementValue: 0
   cameraInput_X: 0
   cameraInput_Y: 0
-  isSprinting: 0
+  Sprinting: 0
+  Jumping: 0
 --- !u!54 &1219922792981141905
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -3603,9 +3604,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isSprinting: 0
   isWalking: 0
+  isGrounded: 0
+  isJumping: 0
   speed: 2
   RotateSpeed: 13
   SprintSpeed: 5
+  inAirTimer: 0
+  LeapVelocity: 0.25
+  FallVelocity: 50
+  RayCastHeightOffSet: 0.5
+  JumpHeight: 3
+  GravityIntensity: -3
+  ground_Lyr:
+    serializedVersion: 2
+    m_Bits: 1
 --- !u!114 &1219922792981141908
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3618,6 +3630,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4b10e697d1948a4293363e54da044ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isInteracting: 0
 --- !u!114 &1219922792981141909
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3630,6 +3643,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e59b3c3eeefd9644798ade5359b8dec0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animator: {fileID: 0}
 --- !u!95 &1219922792981141910
 Animator:
   serializedVersion: 5

@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class AnimatorController : MonoBehaviour
 {
-    Animator _anim;
+    public Animator animator;
 
     int _ValueH;
     int _ValueV;
 
     private void Awake()
     {
-        _anim = GetComponent<Animator>();
+        animator = GetComponent<Animator>();
 
         //get the hash of the parameters to feed to the animator
         _ValueH = Animator.StringToHash("Horizontal");
@@ -78,10 +78,19 @@ public class AnimatorController : MonoBehaviour
             _snappedHorizontalMovement = horizontal;
             _snappedVerticalMovement = 2; //Value used in BlendTree is used
         }
-        
-        _anim.SetFloat(_ValueH, _snappedHorizontalMovement, 0.1f, Time.deltaTime);
-        _anim.SetFloat(_ValueV, _snappedVerticalMovement, 0.1f, Time.deltaTime);
+
+        animator.SetFloat(_ValueH, _snappedHorizontalMovement, 0.1f, Time.deltaTime);
+        animator.SetFloat(_ValueV, _snappedVerticalMovement, 0.1f, Time.deltaTime);
     }
+
+    public void PlayTargetAnimation(string plyAnim, bool isInteracting)
+    {
+        //Set the 'isInteracting' variable in the animator to the value passed in the isInteracting parameter
+        animator.SetBool("isInteracting", isInteracting);
+
+        animator.CrossFade(plyAnim, 0.2f);
+    }
+
 }
 
 

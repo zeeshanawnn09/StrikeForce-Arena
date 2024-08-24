@@ -7,12 +7,16 @@ public class PlayerManager : MonoBehaviour
     InputManager _inputManager;
     PlayerMovement _playerMovement;
     CameraController _cameraController;
+    Animator _animator;
+
+    public bool isInteracting;
 
     private void Awake()
     {
         _inputManager = GetComponent<InputManager>();
         _playerMovement = GetComponent<PlayerMovement>();
         _cameraController = FindAnyObjectByType<CameraController>();
+        _animator = GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -27,8 +31,11 @@ public class PlayerManager : MonoBehaviour
         _playerMovement.Handler();
     }
 
-    private void LateUpdate()
+    void LateUpdate()
     {
         _cameraController.CameraHandler();
+        isInteracting = _animator.GetBool("isInteracting");
+        _playerMovement.isJumping = _animator.GetBool("isJumping");
+        _animator.SetBool("isGrounded", _playerMovement.isGrounded);
     }
 }

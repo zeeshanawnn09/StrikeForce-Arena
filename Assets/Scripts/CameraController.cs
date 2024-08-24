@@ -14,7 +14,7 @@ public class CameraController : MonoBehaviour
 
     [Header("Camera Movement Settings")]
 
-    public Transform camera;
+    public Transform camera_transform;
 
     public float CameraSmoothTime = 0.3f;
     public float HorizontalLook;
@@ -81,7 +81,7 @@ public class CameraController : MonoBehaviour
         _rotation = Vector3.zero;
         _rotation.x = VerticalLook;
         _targetRotation = Quaternion.Euler(_rotation);
-        camera.localRotation = _targetRotation;
+        camera_transform.localRotation = _targetRotation;
 
     }
 
@@ -89,14 +89,14 @@ public class CameraController : MonoBehaviour
     {
         float _plyrPos = _DefaultPosCamera;
         RaycastHit hit;
-        Vector3 direction = cameraTransform.position - camera.position;
+        Vector3 direction = cameraTransform.position - camera_transform.position;
         direction.Normalize();
 
         //Check if the camera is colliding with any object in the scene
-        if (Physics.SphereCast(camera.transform.position, CameraCollisionRadius, direction, out hit, Mathf.Abs(_plyrPos), CameraCollisionLayer))
+        if (Physics.SphereCast(camera_transform.transform.position, CameraCollisionRadius, direction, out hit, Mathf.Abs(_plyrPos), CameraCollisionLayer))
         {
             //Get the distance between the camera and the object that the camera is colliding with and adjust the camera position to avoid the collision
-            float distance = Vector3.Distance(camera.position, hit.point);
+            float distance = Vector3.Distance(camera_transform.position, hit.point);
             _plyrPos =- (distance - CameraCollisionOffset);
         }
 
