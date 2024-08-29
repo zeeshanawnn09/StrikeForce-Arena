@@ -79,7 +79,7 @@ public class PlayerMovement : MonoBehaviour
                 isWalking = true;
             }
 
-            if (_inputManager.movementValue >= 0f)
+            if (_inputManager.movementValue <= 0f)
             {
                 isWalking = false;
             }

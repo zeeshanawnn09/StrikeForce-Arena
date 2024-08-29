@@ -22,8 +22,11 @@ public class InputManager : MonoBehaviour
 
     [Header("Input Buttons Flags")]
 
-    public bool Sprinting;
-    public bool Jumping;
+    public bool Sprinting_Input;
+    public bool Jumping_Input;
+    public bool Fire_Input;
+    public bool Reload_Input;
+    public bool Scope_Input;
 
     private void Awake()
     {
@@ -42,10 +45,16 @@ public class InputManager : MonoBehaviour
             //when the player press the look button, the look vector will be updated
             _controls.PlayerMovements.CameraMovement.performed += i => look = i.ReadValue<Vector2>();
 
-            //When the player press the sprint button, the isSprinting bool will be updated
-            _controls.PlayerActions.Sprint.performed += i => Sprinting = true;
-            _controls.PlayerActions.Sprint.canceled += i => Sprinting = false;
-            _controls.PlayerActions.Jump.performed += i => Jumping = true;
+            //Controls for the player actions
+            _controls.PlayerActions.Sprint.performed += i => Sprinting_Input = true;
+            _controls.PlayerActions.Sprint.canceled += i => Sprinting_Input = false;
+            _controls.PlayerActions.Jump.performed += i => Jumping_Input = true;
+            _controls.PlayerActions.Fire.performed += i => Fire_Input = true;
+            _controls.PlayerActions.Fire.canceled += i => Fire_Input = false;
+            _controls.PlayerActions.Reload.performed += i => Reload_Input = true;
+            _controls.PlayerActions.Reload.canceled += i => Reload_Input = false;
+            _controls.PlayerActions.Scope.performed += i => Scope_Input = true;
+            _controls.PlayerActions.Scope.canceled += i => Scope_Input = false;
         }
 
         _controls.Enable();
@@ -75,7 +84,7 @@ public class InputManager : MonoBehaviour
     private void SprintHandler()
     {
         //if the player is walking and when the SHIFT button is pressed, the player will sprint
-        if (Sprinting && movementValue > 0.5f)
+        if (Sprinting_Input && movementValue > 0.5f)
         {
             _playerMovement.isSprinting = true;
         }
@@ -88,9 +97,9 @@ public class InputManager : MonoBehaviour
     private void JumpHandler()
     {
         //if the player is jumping, the player will jump and the isJumping bool will be set to false
-        if (Jumping)
+        if (Jumping_Input)
         {
-            Jumping = false;
+            Jumping_Input = false;
             _playerMovement.JumpBehavior();
         }
     }
