@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
 public class ShootingBehavior : MonoBehaviour
 {
     Animator _animator;
     InputManager _inputManager;
     PlayerMovement _playerMovement;
+    PhotonView _view;
 
     [Header("Shooting Settings")]
     
@@ -41,6 +43,7 @@ public class ShootingBehavior : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
+        _view = GetComponent<PhotonView>();
         _animator = GetComponent<Animator>();
         _inputManager = GetComponent<InputManager>();
         _playerMovement = GetComponent<PlayerMovement>();
@@ -105,6 +108,11 @@ public class ShootingBehavior : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!_view.IsMine)
+        {
+            return;
+        }
+
         if(isReloading || _playerMovement.isSprinting)
         {
             _animator.SetBool("canShoot", false);

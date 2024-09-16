@@ -23,7 +23,15 @@ public class LaunchBehavior : MonoBehaviourPunCallbacks
     [SerializeField]
     GameObject _RoomListPrefab;
 
+    [SerializeField]
+    Transform _PlayerContentList;
+
+    [SerializeField]
+    GameObject _PlayerListPrefab;
+
     public static LaunchBehavior instance;
+
+    public GameObject Start_Btn;
 
 
     private void Awake()
@@ -38,16 +46,23 @@ public class LaunchBehavior : MonoBehaviourPunCallbacks
         PhotonNetwork.ConnectUsingSettings();
     }
 
+    public void StartGame()
+    {
+        PhotonNetwork.LoadLevel(1);
+    }
+
     public override void OnConnectedToMaster()
     {
         Debug.Log("Connected to Master Server!!!");
         PhotonNetwork.JoinLobby();
+        PhotonNetwork.AutomaticallySyncScene = true;
     }
 
     public override void OnJoinedLobby()
     {
         MenuController.instance.OpenMenu("MainMenu");
         Debug.Log("Joined Lobby!!!");
+        PhotonNetwork.NickName = "Player " + Random.Range(0, 1000).ToString("0000");
     }
 
     public void CreateRoom()
@@ -72,6 +87,29 @@ public class LaunchBehavior : MonoBehaviourPunCallbacks
     {
         MenuController.instance.OpenMenu("JoinRoomMenu");
         _roomName_txt.text = PhotonNetwork.CurrentRoom.Name;
+
+        //Array that shows players in the room
+        Player[] players = PhotonNetwork.PlayerList;
+
+        foreach(Transform child in _PlayerContentList)
+        {
+            Destroy(child.gameObject);
+        }
+
+        //Displays all the players in the room
+        for (int i = 0; i < players.Count(); i++)
+        {
+            Instantiate(_PlayerListPrefab, _PlayerContentList).GetComponent<PlayerListBehavior>().SetUp(players[i]);
+        }
+
+        //The start button will only show to the player which made the room
+        Start_Btn.SetActive(PhotonNetwork.IsMasterClient);
+    }
+
+    //This method will be called if the room's host leaves the room, it'll make give another player host priviledges
+    public override void OnMasterClientSwitched(Player newMasterClient)
+    {
+        Start_Btn.SetActive(PhotonNetwork.IsMasterClient);
     }
 
     public override void OnCreateRoomFailed(short returnCode, string ErrorMsg)
@@ -79,6 +117,7 @@ public class LaunchBehavior : MonoBehaviourPunCallbacks
         _error_txt.text = "Cannot Create Room :(  " + ErrorMsg;
         MenuController.instance.OpenMenu("ErrorMenu");
     }
+
 
     public void LeaveRoom()
     {
@@ -100,7 +139,18 @@ public class LaunchBehavior : MonoBehaviourPunCallbacks
 
         for (int i = 0; i < roomList.Count; i++)
         {
+            if (roomList[i].RemovedFromList)
+            {
+                continue;
+            }
+
             Instantiate(_RoomListPrefab, _RoomContentList).GetComponent<RoomsListingBehavior>().SetUpRoom(roomList[i]);
         }
+    }
+
+    //Method to be called when a player joins the room
+    public override void OnPlayerEnteredRoom(Player newPlayer)
+    {
+        Instantiate(_PlayerListPrefab, _PlayerContentList).GetComponent<PlayerListBehavior>().SetUp(newPlayer);
     }
 }

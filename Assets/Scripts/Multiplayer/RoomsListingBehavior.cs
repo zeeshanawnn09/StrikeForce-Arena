@@ -9,7 +9,7 @@ public class RoomsListingBehavior : MonoBehaviour
     [SerializeField]
     Text _RoomName_txt;
 
-    RoomInfo _info;
+    public RoomInfo _info;
 
     public void SetUpRoom(RoomInfo data)
     {

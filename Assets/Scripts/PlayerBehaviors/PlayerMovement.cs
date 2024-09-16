@@ -1,4 +1,5 @@
 using JetBrains.Annotations;
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -43,6 +44,7 @@ public class PlayerMovement : MonoBehaviour
     public float GravityIntensity = -3.0f;
 
     public LayerMask ground_Lyr;
+
 
     private void Awake()
     {
